@@ -17,7 +17,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Drop the kuma argument
+	// Drop the kuta argument
 	args := os.Args[1:]
 	// Run the command
 	status, err := mod.BashExec(args)
