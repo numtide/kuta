@@ -3,21 +3,17 @@ package mod
 import (
 	"bufio"
 	"errors"
+	"fmt"
 	"log"
 	"os"
-	"path/filepath"
+	"os/exec"
 	"strings"
 
 	"golang.org/x/sys/unix"
 )
 
 func chownR(path string, uid, gid int) error {
-	return filepath.Walk(path, func(name string, info os.FileInfo, err error) error {
-		if err == nil {
-			err = os.Lchown(name, uid, gid)
-		}
-		return err
-	})
+	return exec.Command("chown", "-R", fmt.Sprintf("%d:%d", uid, gid), path).Run()
 }
 
 func patchEtcPasswd(user string, newUID string, newGID string) error {
