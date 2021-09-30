@@ -22,7 +22,7 @@ passed to docker or docker-compose.
 ```
 # Use kuta to change the user UID/GID at runtime
 RUN curl -sfL \
-  https://github.com/numtide/kuta/releases/download/v0.0.3/kuta_0.0.3_linux_amd64.tar.gz \
+  https://github.com/numtide/kuta/releases/download/v0.0.4/kuta_0.0.4_linux_amd64.tar.gz \
   | sudo tar -xzvC / kuta
 RUN sudo chown 0:0 /kuta && sudo chmod +xs /kuta
 ENTRYPOINT ["/kuta"]
