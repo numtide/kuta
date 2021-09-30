@@ -62,7 +62,11 @@ func BashExec(args []string) (int, error) {
 	// Forward signals to the process
 	go func() {
 		for sig := range sigs {
-			proc.Signal(sig)
+			if sig == syscall.SIGCHLD {
+				reapChildProcesses()
+			} else {
+				proc.Signal(sig)
+			}
 		}
 	}()
 

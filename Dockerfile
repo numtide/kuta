@@ -18,22 +18,25 @@ RUN echo "ALL ALL=NOPASSWD: ALL" >> /etc/sudoers
 COPY --from=builder /src/kuta /kuta
 RUN chown 0:0 /kuta && chmod +s /kuta
 
+# Create ubuntu user
 ARG USERNAME=ubuntu
 ARG USER_UID=1300
 ARG USER_GID=$USER_UID
-
-# Create ubuntu user
 RUN groupadd --gid "$USER_GID" "$USERNAME"
-
 RUN useradd \
   --uid "$USER_UID" \
   --gid "$USER_GID" \
   --create-home \
   "$USERNAME"
 
+# Switch to user
 USER $USER_UID:$USER_GID
-WORKDIR /home
+# Needed by kuta to pick the user to mutate.
 ENV USER=ubuntu
+# Enable debug logs
 ENV KUTA_DEBUG=1
+# Test that kuta keeps the same PWD
+WORKDIR /home
 
+# Go!
 ENTRYPOINT ["/kuta"]

@@ -20,10 +20,23 @@ passed to docker or docker-compose.
 ## Usage
 
 ```
-ADD https://TODO /entrypoint
-RUN chown 0:0 /entrypoint && chmod +xs /entrypoint
-ENTRYPOINT ["/entrypoint"]
+# Use kuta to change the user UID/GID at runtime
+RUN curl -sfL \
+  https://github.com/numtide/kuta/releases/download/v0.0.3/kuta_0.0.3_linux_amd64.tar.gz \
+  | sudo tar -xzvC / kuta
+RUN sudo chown 0:0 /kuta && sudo chmod +xs /kuta
+ENTRYPOINT ["/kuta"]
 ```
+
+```
+Usage: kuta [<cmd> [...<args>]]
+
+If no command is passed, stats a bash login shell.
+```
+
+## Features
+
+* Reap child processes
 
 ## Assumptions
 
