@@ -5,6 +5,8 @@ import (
 	"os"
 	"os/user"
 	"syscall"
+
+	"github.com/numtide/kuta/passwd"
 )
 
 // PatchUser
@@ -21,7 +23,7 @@ func PatchUser() error {
 	targetGIDStr := fmt.Sprintf("%d", targetGID)
 
 	// If a user with the process UID already exists, use that as the target user.
-	targetUser, err := user.LookupId(targetUIDStr)
+	targetUser, err := passwd.LookupID(targetUIDStr)
 	if err == nil {
 		debug("found existing user with id", targetUID)
 		patchUser = targetUser
@@ -31,7 +33,7 @@ func PatchUser() error {
 		if username == "" {
 			return fmt.Errorf("please set the USER environment variable to the user you want to mutate")
 		}
-		patchUser, err = user.Lookup(username)
+		patchUser, err = passwd.Lookup(username)
 		if err != nil {
 			return fmt.Errorf("user lookup error: %w", err)
 		}

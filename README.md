@@ -36,7 +36,14 @@ If no command is passed, stats a bash login shell.
 
 ## Features
 
+* Only works in a Docker Linux container, with no pam login modules.
 * Reap child processes
+
+## Known issues
+
+* It doesn't check if a user or group with the target UID already exists.
+* It's a big security hole. Only use this for dev.
+* Concurrent calls of /kuta is not guaranteed to work as expected.
 
 ## Assumptions
 
