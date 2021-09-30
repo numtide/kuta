@@ -51,6 +51,8 @@ func BashExec(args []string) (int, error) {
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs)
 
+	debug(args, attr)
+
 	// Run the program
 	proc, err := os.StartProcess(args[0], args, attr)
 	if err != nil {

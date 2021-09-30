@@ -23,6 +23,7 @@ func PatchUser() error {
 	// If a user with the process UID already exists, use that as the target user.
 	targetUser, err := user.LookupId(targetUIDStr)
 	if err == nil {
+		debug("found existing user with id", targetUID)
 		patchUser = targetUser
 	} else {
 		// Otherwise lookup using the USER environment variable
@@ -37,6 +38,8 @@ func PatchUser() error {
 	}
 
 	if patchUser.Uid != targetUIDStr || patchUser.Gid != targetGIDStr {
+		debug("patching", patchUser)
+
 		if syscall.Geteuid() != 0 {
 			return fmt.Errorf("entrypoint has no setuid or is not owned by root")
 		}
