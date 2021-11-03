@@ -1,6 +1,6 @@
 # Kuta - devcontainer entrypoint
 
-**STATUS: experimental**
+**STATUS: on hold**
 
 A common pattern with docker and docker-compose is to volume mount the project
 code into one or more containers. The goal is to allow faster feedback loop
@@ -16,6 +16,18 @@ to be able to delete or edit.
 To work around this issue, this project introduces a small suid binary that
 quickly changes the user inside the container to match whatever --user that is
 passed to docker or docker-compose.
+
+## Major known issue
+
+While hacking on this idea, we found out a major blocker to deploy this more widely; we had developers complain that the container was taking 15 minutes to start.
+
+After some investigation we found out the root cause: when `overlayfs2` is being used a the volume backend, a `chown` on a file triggers a full copy-on-write of the file. If the $HOME folder is large it quickly becomes a costly IO operation. The `btrfs` backend doesn't have this problem.
+
+## Other known issues
+
+* It doesn't check if a user or group with the target UID already exists.
+* It's a big security hole. Only use this for dev.
+* Concurrent calls of /kuta is not guaranteed to work as expected.
 
 ## Usage
 
@@ -39,11 +51,6 @@ If no command is passed, stats a bash login shell.
 * Only works in a Docker Linux container, with no pam login modules.
 * Reap child processes
 
-## Known issues
-
-* It doesn't check if a user or group with the target UID already exists.
-* It's a big security hole. Only use this for dev.
-* Concurrent calls of /kuta is not guaranteed to work as expected.
 
 ## Assumptions
 
